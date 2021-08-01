@@ -123,3 +123,13 @@ app.get('/donate', jsonParser, (req, res) => {
     res.status(500).send({ error: err });
   }  
 });
+
+
+
+app.post('/recipes', jsonParser, (req, res) => {
+  var values = req.body.ingredients;
+  var db = require('./dbopera');
+  db.getRecipes(values).then(result => {
+    res.send(result);
+  });
+});
