@@ -10,13 +10,14 @@ const getRecipes = async (values) => {
       if (i != values.length-1) filters += ',';
     })
 
-    var queryStr = `select r.recipeID, d.dishName, d.instructions, i.ingredientName
+    var queryStr = `select distinct(d.dishName), max(r.recipeID) recipeID, d.instructions
                     from [dbo].[Recipes] r with(nolock)
                     join [dbo].[Dishes] d with(nolock)
                     on r.dishID = d.dishID
                     join [dbo].[Ingredients] i with(nolock)
                     on r.ingredientID = i.ingredientID
-                    where i.ingredientName in (${filters})`;
+                    where i.ingredientName in (${filters})
+                    group by d.dishName, d.instructions`;
 
     await sql.connect(config);
     const result = await sql.query(queryStr);
