@@ -130,6 +130,19 @@ app.post('/recipes', jsonParser, (req, res) => {
   var values = req.body.ingredients;
   var db = require('./dbopera');
   db.getRecipes(values).then(result => {
-    res.send(result);
+    res.send( result );
   });
 });
+
+app.post('/submit', jsonParser, (req, res) => {
+  try {
+    var db = require('./dbopera');    
+    var values = req.body;
+    db.insertRecipe(values).then( result => {
+      res.send( result );
+    });
+  } catch (err) {
+    console.log("ex: ", err);
+    res.status(500).send({ error: err });
+  }
+})
